@@ -1,13 +1,55 @@
 import styled from "styled-components";
 import Link from "next/link";
+import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-function Register() {
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert("form");
+const Register = () => {
+  const [values, setValues] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const toastOptions = {
+    position: "bottom-right",
+    autoClose: 4000,
+    pauseOnHover: true,
+    draggable: true,
+    theme: "dark",
   };
 
-  const handleChange = (e) => {};
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (handleValidation()) {
+      
+    }
+  };
+
+  const handleValidation = () => {
+    const { password, confirmPassword, username, email } = values;
+    const regex =
+      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    if (regex.test(email) === false) {
+      toast.error("Inavlid Email !!", toastOptions);
+      return false;
+    } else if (password != confirmPassword) {
+      toast.error("Password do not match", toastOptions);
+      return false;
+    } else if (username.length < 3) {
+      toast.error("Username must be at least 3 characters", toastOptions);
+      return false;
+    } else if (password.length < 8) {
+      toast.error("Password should be at least 3 characters", toastOptions);
+      return false;
+    }
+    return true;
+  };
+
+  const handleChange = (e) => {
+    setValues({ ...values, [event.target.name]: event.target.value });
+  };
   return (
     <>
       <FormContainer>
@@ -19,37 +61,42 @@ function Register() {
 
           <input
             type="text"
-            placeholder="Username"
+            placeholder="Usernames"
             name="username"
+            required
             onChange={(event) => handleChange(event)}
           />
           <input
             type="email"
             placeholder="Email"
             name="email"
+            required
             onChange={(event) => handleChange(event)}
           />
           <input
             type="password"
             placeholder="Password"
             name="password"
+            required
             onChange={(event) => handleChange(event)}
           />
           <input
             type="password"
             placeholder="Confirm Password"
             name="confirmPassword"
+            required
             onChange={(event) => handleChange(event)}
           />
           <button type="submit">Create User</button>
           <span>
-            already have an account ? <Link href="/login">Login</Link>
+            Already have an account ? <Link href="/login">Login</Link>
           </span>
         </form>
       </FormContainer>
+      <ToastContainer />
     </>
   );
-}
+};
 
 const FormContainer = styled.div`
   height: 100vh;
@@ -98,6 +145,33 @@ const FormContainer = styled.div`
       outline: none;
     }
   }
+  button {
+    background-color: #997af0;
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 0.4rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    transition: 0.5s ease-in-out;
+    &:hover {
+      background-color: #4e0eff;
+    }
+  }
+  span {
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    a {
+      color: #4e0eff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  }
 `;
+
+Register.displayName = "Register";
 
 export default Register;
