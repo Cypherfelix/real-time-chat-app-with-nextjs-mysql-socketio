@@ -12,11 +12,9 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   },
   // logging: false,
 });
-const models = require("../models")(sequelize);
-const db = {
-  // models,
-};
+const { user } = require("../models")(sequelize);
+const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
-db.user = require("../models/userModel")(sequelize, Sequelize);
+db.user = user;
 module.exports = { db, sequelize };

@@ -1,11 +1,19 @@
 import "../styles/globals.css";
+import "react-toastify/dist/ReactToastify.css";
 import type { AppProps } from "next/app";
 import { StoreProvider } from "../utils/store";
-const MyApp = ({ Component, pageProps }: AppProps) => {
+import { SessionProvider } from "next-auth/react";
+
+const MyApp = ({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps) => {
   return (
-    <StoreProvider>
-      <Component {...pageProps} />
-    </StoreProvider>
+    <SessionProvider session={session}>
+      <StoreProvider>
+        <Component {...pageProps} />
+      </StoreProvider>
+    </SessionProvider>
   );
 };
 

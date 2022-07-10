@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
@@ -8,6 +7,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { Store } from "../utils/store";
 import { FormContainer } from "../styles";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 const Register = () => {
   const [values, setValues] = useState({
@@ -40,12 +40,14 @@ const Register = () => {
         password,
       });
 
-      if (data.status == false) {
+      if (data.status === false) {
         toast.error(data.msg, toastOptions);
       } else if (data.status === true) {
-        dispatch({ type: "USER_LOGIN", payload: data.user });
-        Cookies.set("userInfo", JSON.stringify(data.user));
-        router.push("/");
+        await signIn("credentials", {
+          email: email,
+          password: password,
+          redirect: false,
+        });
       } else {
         toast.error(data.msg, toastOptions);
       }
