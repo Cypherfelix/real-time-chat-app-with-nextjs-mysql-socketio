@@ -228,7 +228,6 @@ module.exports.getUserByEmail = async (req, res) => {
       }
     );
     const user = userModel.at(0);
-    console.log(user);
     user.password = null;
     if (user) {
       return res.json({
