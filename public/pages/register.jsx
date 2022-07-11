@@ -1,13 +1,12 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useContext, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
-import Cookies from "js-cookie";
-import { Store } from "../utils/store";
 import { FormContainer } from "../styles";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
+import { Heading } from "@chakra-ui/react";
 
 const Register = () => {
   const [values, setValues] = useState({
@@ -24,15 +23,20 @@ const Register = () => {
     draggable: true,
     theme: "dark",
   };
-  const { state, dispatch } = useContext(Store);
-  const { userInfo } = state;
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (session) {
+      router.push("/");
+    }
+  }, [session]);
 
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (handleValidation()) {
-      const { password, confirmPassword, username, email } = values;
+      const { password, username, email } = values;
 
       const { data } = await axios.post("/api/users/register", {
         username,
@@ -57,6 +61,7 @@ const Register = () => {
   const handleValidation = () => {
     const { password, confirmPassword, username, email } = values;
     const regex =
+      // eslint-disable-next-line no-useless-escape
       /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
     if (regex.test(email) === false) {
       toast.error("Inavlid Email !!", toastOptions);
@@ -74,9 +79,20 @@ const Register = () => {
     return true;
   };
 
-  const handleChange = (e) => {
+  const handleChange = () => {
     setValues({ ...values, [event.target.name]: event.target.value });
   };
+
+  if (status === "loading") {
+    return <Heading>Checking Authentication...</Heading>;
+  }
+  if (session) {
+    setTimeout(() => {
+      router.push("/");
+    }, 5000);
+    return <Heading>you are already signed in</Heading>;
+  }
+
   return (
     <>
       <FormContainer>

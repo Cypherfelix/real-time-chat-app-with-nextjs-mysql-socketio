@@ -4,13 +4,13 @@ const Op = db.Sequelize.Op;
 const bcrypt = require("bcrypt");
 const Sequelize = require("sequelize").Sequelize;
 
-module.exports.register = async (req, res, next) => {
+module.exports.register = async (req, res, _next) => {
   try {
     const { username, email, password } = req.body;
 
     const usernameCheck = await User.findOne({
       where: {
-        username: username,
+        username,
       },
     });
 
@@ -20,7 +20,7 @@ module.exports.register = async (req, res, next) => {
 
     const emailCheck = await User.findOne({
       where: {
-        email: email,
+        email,
       },
     });
 
@@ -134,13 +134,52 @@ module.exports.checkuser = async (req, res) => {
   }
 };
 
-module.exports.updateuser = async (req, res) => {};
+module.exports.updateuser = async (req, res) => {
+  try {
+    const gotUser = req.body.user;
+    const payload = req.body.payload;
 
-module.exports.resetpassword = async (req, res) => {};
+    const { email } = gotUser;
 
-module.exports.sendverify = async (req, res) => {};
+    const model = await sequelize.query(
+      `SELECT  * FROM users WHERE  users.email LIKE '%${email}'`,
+      {
+        mapToModel: true,
+        model: User,
+      }
+    );
 
-module.exports.checkverify = async (req, res) => {};
+    const user = model.at(0);
+
+    if (user) {
+      await user.update({
+        ...payload,
+      });
+      await user.save();
+      user.password = null;
+      return res.json({
+        status: true,
+        user: user,
+      });
+    } else {
+      return res.json({
+        status: false,
+        msg: "Not Found",
+      });
+    }
+  } catch (error) {
+    return res.json({
+      status: false,
+      msg: "Request failed",
+    });
+  }
+};
+
+module.exports.resetpassword = async (_req, _res) => {};
+
+module.exports.sendverify = async (_req, _res) => {};
+
+module.exports.checkverify = async (_req, _res) => {};
 
 module.exports.test = async (req, res) => {
   try {

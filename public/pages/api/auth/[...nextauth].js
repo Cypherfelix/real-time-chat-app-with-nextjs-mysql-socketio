@@ -19,7 +19,6 @@ export default NextAuth({
       if (token?.id) session.user.id = token.id;
 
       if (!session) return;
-      console.log(session.user.email);
 
       // const client = await connectToDatabase();
       // const usersCollection = client.db().collection("users");
@@ -32,8 +31,6 @@ export default NextAuth({
       }
 
       // var userData = data.user;
-
-      console.log(data);
       return {
         ...session,
         user: {
@@ -41,8 +38,6 @@ export default NextAuth({
           ...data.user,
         },
       };
-
-      return session;
     },
     async signIn({ user, account, profile }) {
       if (account.provider === "google") {
@@ -70,7 +65,6 @@ export default NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        console.log(credentials.email);
         const response = await fetch(login, {
           method: "POST",
           body: JSON.stringify({
@@ -84,7 +78,6 @@ export default NextAuth({
         const data = await response.json();
 
         if (data.status) {
-          console.log(data);
           return {
             ...data.user,
           };

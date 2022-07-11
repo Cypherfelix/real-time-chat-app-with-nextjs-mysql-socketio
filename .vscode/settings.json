@@ -1,0 +1,7 @@
+{
+  "git.autorefresh": false,
+  "scm.countBadge": "focused",
+  "scm.autoReveal": false,
+  "git.enabled": true,
+  "editor.codeActionsOnSave": {}
+}

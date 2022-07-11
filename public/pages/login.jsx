@@ -1,13 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
-import { FormContainer } from "../styles";
+import React, { useEffect, useState } from "react";
+import { FormContainer, Container } from "../styles";
 import { Button, Heading } from "@chakra-ui/react";
-import { useSession, signIn, signOut } from "next-auth/react";
-import { BsGithub, BsTwitter, BsGoogle } from "react-icons/bs";
+import { useSession, signIn } from "next-auth/react";
+import { BsGoogle } from "react-icons/bs";
 import { toast, ToastContainer } from "react-toastify";
-import { Store } from "../utils/store";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import Cookies from "js-cookie";
 
 const providers = [
   {
@@ -24,12 +22,10 @@ const LogIn = () => {
     draggable: true,
     theme: "dark",
   };
-  const { state, dispatch } = useContext(Store);
-  const { userInfo } = state;
 
   const router = useRouter();
   const { data: session, status } = useSession();
-  console.log(session);
+  console.log(status);
 
   const [values, setValues] = useState({
     email: "",
@@ -40,6 +36,9 @@ const LogIn = () => {
   let err = error;
 
   useEffect(() => {
+    if (session) {
+      router.push("/");
+    }
     if (err) {
       toast.error(err, toastOptions);
       console.log(err);
@@ -53,12 +52,7 @@ const LogIn = () => {
 
   const handleOAuthSignIn = async (provider) => {
     try {
-      //, { callbackUrl: "/login" }
       signIn(provider);
-      // console.log(result);
-      // if (result.error) {
-      //   toast.error(result.error, toastOptions);
-      // }
     } catch (err) {
       toast.error(err.message, toastOptions);
     }
@@ -82,19 +76,22 @@ const LogIn = () => {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = () => {
     setValues({ ...values, [event.target.name]: event.target.value });
   };
 
-  if (status === "loading")
+  if (status === "loading") {
     return <Heading>Checking Authentication...</Heading>;
-
+  }
   if (session) {
     setTimeout(() => {
-      // router.push("/");
+      router.push("/");
     }, 5000);
-
-    return <Heading>you are already signed in</Heading>;
+    return (
+      <Container>
+        <img src="/assets/images/loader.gif" className="loader" alt="" />
+      </Container>
+    );
   }
 
   return (
@@ -125,7 +122,7 @@ const LogIn = () => {
             <Button
               key={name}
               leftIcon={<Icon />}
-              onClick={(e) => handleOAuthSignIn(name)}
+              onClick={() => handleOAuthSignIn(name)}
               textTransform="uppercase"
               w="100%"
             >

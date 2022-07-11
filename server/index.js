@@ -9,7 +9,7 @@ app.use(express.json());
 
 app.use("/api/auth", userRoutes);
 
-const server = app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT, () => {
   console.log(
     "Express server listening on port " +
       `https://localhost:${process.env.PORT}`
@@ -23,7 +23,7 @@ const server = app.listen(process.env.PORT, () => {
 
 const { db } = require("./database");
 db.sequelize
-  .sync() //{ force: true }
+  .sync() // { force: true }
   .then(() => {
     console.log("Drop and re-sync db.");
   })

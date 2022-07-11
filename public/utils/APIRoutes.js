@@ -5,5 +5,6 @@ const accountCheck = `${host}/api/auth/checkaccount`;
 const check = `${host}/api/auth/check`;
 const login = `${host}/api/auth/login`;
 const getUserByEmail = `${host}/api/auth/getUserByEmail`;
+const setAvatar = `${host}/api/auth/setAvatar`;
 
-export { registerRoute, accountCheck, login, check, getUserByEmail };
+export { registerRoute, accountCheck, login, check, getUserByEmail, setAvatar };
