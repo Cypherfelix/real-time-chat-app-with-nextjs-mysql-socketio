@@ -1,10 +1,10 @@
 import axios from "axios";
 import { getSession } from "next-auth/react";
-import { setAvatar } from "../../../utils/APIRoutes";
+import { getUsers } from "../../../utils/APIRoutes";
 
 const handler = async (req, res) => {
   const session = await getSession({ req });
-  if (req.method !== "POST") {
+  if (req.method !== "GET") {
     res.status(404).json({
       msg: "Page not Found",
     });
@@ -15,15 +15,13 @@ const handler = async (req, res) => {
       });
       res.end();
     } else {
-      const { data } = await axios.post(setAvatar, {
-        payload: { profile: req.body.avatar },
-        user: {
-          ...session.user,
-        },
+      const { data } = await axios.post(getUsers, {
+        email: session.user.email,
       });
 
       if (data.status === true) {
         res.json({
+          users: data.users,
           msg: "done",
         });
       } else {

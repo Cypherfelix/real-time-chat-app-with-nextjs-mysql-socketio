@@ -7,7 +7,8 @@ const FormContainer = styled.div`
   justify-content: center;
   gap: 1rem;
   align-items: center;
-  background-color: #131324;
+  background-color: ${({ theme }) => theme.primary};
+  overflow: auto;
   img {
     height: 3rem;
   }
@@ -20,17 +21,17 @@ const FormContainer = styled.div`
   }
 
   h1 {
-    color: white;
+    color: ${({ theme }) => theme.text};
     text-transform: uppercase;
   }
 
   form {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    background-color: #00000076;
+    gap: 1.5rem;
+    background-color: ${({ theme }) => theme.secondary};
     border-radius: 2rem;
-    padding: 3rem 5rem;
+    padding: 2rem 5rem;
   }
 
   input {
@@ -38,7 +39,7 @@ const FormContainer = styled.div`
     padding: 1rem;
     border: 0.1rem solid #4e0eff;
     border-radius: 0.4rem;
-    color: white;
+    color: ${({ theme }) => theme.text};
     width: 100%;
     font-size: 1rem;
     &:focus {
@@ -48,7 +49,7 @@ const FormContainer = styled.div`
   }
   button {
     background-color: #997af0;
-    color: white;
+    color: ${({ theme }) => theme.text};
     padding: 1rem 2rem;
     border: none;
     font-weight: bold;
@@ -62,7 +63,7 @@ const FormContainer = styled.div`
     }
   }
   span {
-    color: white;
+    color: ${({ theme }) => theme.text};
     text-transform: uppercase;
     letter-spacing: 1px;
     a {
@@ -79,7 +80,7 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   gap: 3rem;
-  background-color: #131324;
+  background-color: ${({ theme }) => theme.primary};
   height: 100vh;
   width: 100vw;
 
@@ -89,7 +90,7 @@ const Container = styled.div`
 
   .tittle-container {
     h1 {
-      color: white;
+      color: ${({ theme }) => theme.text};
     }
   }
 
@@ -105,7 +106,9 @@ const Container = styled.div`
       justify-content: center;
       align-items: center;
       transition: 0.5s ease-in-out;
-      img,svg,.img {
+      img,
+      svg,
+      .img {
         height: 6rem;
       }
     }
@@ -117,7 +120,7 @@ const Container = styled.div`
 
   .submit-btn {
     background-color: #997af0;
-    color: white;
+    color: ${({ theme }) => theme.text};
     padding: 1rem 2rem;
     border: none;
     font-weight: bold;

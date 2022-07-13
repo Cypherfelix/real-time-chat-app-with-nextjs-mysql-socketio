@@ -31,8 +31,7 @@ module.exports.register = async (req, res, _next) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await User.create({
-      email,
-      username,
+      ...req.body,
       password: hashedPassword,
     });
 
@@ -237,7 +236,7 @@ module.exports.check = async (req, res) => {
     } else {
       const newUser = await User.create({
         email,
-        username: email,
+        username: name.split(" ").at(0).trim(),
         name,
         provider,
       });
@@ -284,5 +283,26 @@ module.exports.getUserByEmail = async (req, res) => {
       status: false,
       msg: "Request failed",
     });
+  }
+};
+
+module.exports.getAllUsers = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const userModel = await sequelize.query(
+      `SELECT  email, id, username, profile, name FROM users WHERE  users.email NOT LIKE '%${email}'`,
+      {
+        model: User,
+        mapToModel: true, // pass true here if you have any mapped fields
+      }
+    );
+
+    return res.json({
+      status: true,
+      users: userModel,
+    });
+
+  } catch (error) {
+    next(error.message);
   }
 };

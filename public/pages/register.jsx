@@ -79,8 +79,13 @@ const Register = () => {
     return true;
   };
 
-  const handleChange = () => {
-    setValues({ ...values, [event.target.name]: event.target.value });
+  const handleChange = (event) => {
+
+    const val = event.target.name === "password" ? event.target.value : event.target.value.trim();
+    setValues({
+      ...values,
+      [event.target.name] : val
+    });
   };
 
   if (status === "loading") {
@@ -101,6 +106,14 @@ const Register = () => {
             <img src="./assets/images/logo.svg" alt="" />
             <h1>TwoChat</h1>
           </div>
+
+          <input
+            type="text"
+            placeholder="Full name"
+            name="name"
+            required
+            onChange={(event) => handleChange(event)}
+          />
 
           <input
             type="text"

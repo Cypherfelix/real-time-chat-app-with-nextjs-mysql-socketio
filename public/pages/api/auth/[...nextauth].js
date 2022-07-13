@@ -1,5 +1,4 @@
 import axios from "axios";
-import Cookies from "js-cookie";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
@@ -39,8 +38,10 @@ export default NextAuth({
         },
       };
     },
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account }) {
       if (account.provider === "google") {
+        console.log(user);
+
         const body = {
           name: user.name,
           email: user.email,

@@ -5,7 +5,8 @@ const {
   login,
   check,
   getUserByEmail,
-  updateuser
+  updateuser,
+  getAllUsers
 } = require('../controllers/usersController')
 
 const router = require('express').Router()
@@ -18,5 +19,6 @@ router.post('/check', check)
 router.post('/getUserByEmail', getUserByEmail)
 router.post("/setAvatar", updateuser);
 router.post("/update", updateuser);
+router.post("/getUsers", getAllUsers);
 
 module.exports = router
