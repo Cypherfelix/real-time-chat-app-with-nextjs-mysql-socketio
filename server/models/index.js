@@ -1,7 +1,3 @@
-const Sequelize = require("sequelize");
-module.exports = (sequelize) => {
-  const user = require("./userModel")(sequelize, Sequelize);
-  return {
-    user: user,
-  };
-};
+const user = require("./userModel");
+const message = require("./messageModel");
+module.exports = {user,message};

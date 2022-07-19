@@ -1,35 +1,61 @@
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
-import Contact from "../components/Contact"
-import Welcome from "../components/Welcome"
-import ChatContainer from '../components/ChatContainer'
+import Contact from "../components/Contact";
+import Welcome from "../components/Welcome";
+import ChatContainer from "../components/ChatContainer";
+import { io } from "socket.io-client";
+import {host} from "../utils/APIRoutes"
 
 const Chat = () => {
-  const [contacts, setContacts] = useState([])
+  const socket = useRef();
+  const [contacts, setContacts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentChat, setCurrentChat] = useState(undefined);
   const { data: session, status } = useSession();
   const router = useRouter();
+
+  const fetchData = async (selectedUser) => {
+    if (selectedUser) {
+      const { data } = await axios.post("/api/messages/getMsg", {
+        to: selectedUser.id,
+      });
+      if (data.status === true) {
+        return data.mesages;
+      } else {
+        return [];
+      }
+    }
+    return [];
+  };
+
   useEffect(() => {
+    console.log("h");
     if (!session && status != "loading") {
       router.push("/login");
     } else {
       const fetchContacts = async () => {
-        const { data } = await axios.get(`/api/users/getUsers`); 
+        const { data } = await axios.get(`/api/users/getUsers`);
         setContacts(data.users);
         setIsLoading(false);
-      }
+      };
       fetchContacts();
     }
   }, [session]);
 
-  const handleChatChange = (chat) => { 
+  useEffect(() => {
+    if (session) {
+      socket
+     }
+  }, [])
+  
+
+  const handleChatChange = (chat) => {
     setCurrentChat(chat);
-  } 
+  };
 
   return (
     <>
@@ -49,7 +75,11 @@ const Chat = () => {
             {!isLoading && currentChat === undefined ? (
               <Welcome user={session.user} />
             ) : (
-                  <ChatContainer user={session.user} selectedUser={ currentChat} />
+              <ChatContainer
+                user={session.user}
+                selectedUser={currentChat}
+                fetchData={fetchData}
+              />
             )}
           </div>
         </Container>
